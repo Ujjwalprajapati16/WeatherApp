@@ -1,9 +1,10 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import connectDB from './Config/database.js';
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./Config/database.js";
 import weatherRoutes from "./Routes/weatherRoutes.js";
-import authRoutes from "./Routes/authRoutes.js"
-import rateLimit from 'express-rate-limit';
+import authRoutes from "./Routes/authRoutes.js";
+import favoriteRoutes from "./Routes/favoriteRoutes.js";
+import rateLimit from "express-rate-limit";
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ const limiter = rateLimit({
   max: 100, // Limit each IP to 100 requests per windowMs
   message: {
     success: false,
-    message: 'Too many requests from this IP, please try again later.',
+    message: "Too many requests from this IP, please try again later.",
   },
 });
 
@@ -26,15 +27,16 @@ const limiter = rateLimit({
 connectDB();
 
 //limiter
-app.use('/api/weather', limiter);
+app.use("/api/weather", limiter);
 
 // Routes
-app.use('/api/weather', weatherRoutes);
-app.use('/api/auth', authRoutes);
+app.use("/api/weather", weatherRoutes);
+app.use("/api/auth", authRoutes);
+app.use("api/favorites", favoriteRoutes);
 
 // Routes
-app.get('/', (req, res) => {
-  res.send('Weather App API is running');
+app.get("/", (req, res) => {
+  res.send("Weather App API is running");
 });
 
 // Start server
